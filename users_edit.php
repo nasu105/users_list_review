@@ -2,10 +2,11 @@
 
 // DBを繋ぐ
 include('functions.php');
-$pdo = connect_to_db();
 
 // id受け取り
 $id = $_GET['id'];
+
+$pdo = connect_to_db();
 
 // var_dump($_GET);
 // exit();
@@ -13,14 +14,16 @@ $id = $_GET['id'];
 $sql = "SELECT * FROM users_table WHERE id=:id";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
 try {
   $status = $stmt->execute();
+  $record = $stmt->fetch(PDO::FETCH_ASSOC);
+  // var_dump($record);
+  // exit();
 } catch (PDOException $e) {
   echo json_encode(["sql error" => "{$e->getMessage()}"]);
   exit();
 }
-
-$record = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
 ?>
